@@ -25,6 +25,10 @@ public abstract class AMite {
 		return (health <=0);
 	}
 	
+	public int getHealth() {
+		return health;
+	}
+	
 	public int getType() {
 		return type;
 	}
@@ -47,4 +51,5 @@ public abstract class AMite {
 	void setDirection(int direction) {
 		this.direction = direction;
 	}
+	
 }	

@@ -13,8 +13,8 @@ import java.util.Timer;
 
 public class Simulation {
 	
-	static int dermathoideses = 2;
-	static int euroglyphuses = 1;
+	static int dermathoideses = 6;
+	static int euroglyphuses = 12;
 	static int length = 10;
 	static int width = 10;
 	
@@ -22,6 +22,8 @@ public class Simulation {
 	static IMap map;
 	static LinkedList<IMite> mitelist = new LinkedList<>();
 	static LinkedList<IEgg> egglist = new LinkedList<>();
+	
+
 	
 	public static void runSimulation() {
 		
@@ -39,7 +41,7 @@ public class Simulation {
 				if (m.layEggAbility()) {
 					egglist.add(new Egg(m.getType(), m.getCordinates()));
 					m.layEgg();	
-					map.setStatus(m.getCordinates(), m.getType()*10 ); // or mite should tell it to map
+					map.setStatus(m.getCordinates(), m.getType()*10); // or mite should tell it to map
 				}
 				
 				boolean bool = true;
@@ -56,43 +58,103 @@ public class Simulation {
 					if (crd.getY() < 0)  crd.setY(0);
 					if (crd.getY() >= width)  crd.setY(width-1);
 					
-					switch (map.getStatus(crd ) ) {
-					
-						case 0: { // empty
-							map.setStatus(crd, m.getType() );
-							// System.out.println(" case 0");
-							m.getCordinates().setX(crd.getX() );
-							m.getCordinates().setY(crd.getY() );
-							bool = false;
-							break;
+					if(m.getType()==8) {
+							switch (map.getStatus(crd)) {
+							
+							case 0: { // empty
+								map.setStatus(crd, m.getType() );
+								// System.out.println(" case 0");
+								m.getCordinates().setX(crd.getX() );
+								m.getCordinates().setY(crd.getY() );
+								bool = false;
+								break;
+							}
+							case 1: { // food
+								m.eat();
+								map.setStatus(crd, m.getType());
+								// System.out.println("case 1");
+								m.getCordinates().setX(crd.getX() );
+								m.getCordinates().setY(crd.getY() );
+								bool = false;
+								break;
+							}
+							case 80: { // egg
+								break;
+							}
+							case 70: { // egg other specimen
+								break; // to work on very hungry state
+							}
+							case 7: { // other speciemen
+								 for(IMite e: mitelist) {
+									 if(e.getCordinates().equals(crd) && e.getType()==7) {
+										 while(m.getHealth()>0 && e.getHealth()>0) {
+											 m.attack(e);
+											 System.out.println("DERMATHOGIDES ZADAJE EUROGLYPHUSOWI 8 OBRA¯EÑ(" + e.getHealth()+")");
+											 if(e.getHealth()!=0) { 
+											 e.attack(m);
+											 System.out.println("EUROGLYPHUS ZADAJE DERMATHOGIDESOWI 5 OBRA¯EÑ(" + m.getHealth()+")");
+											 }
+										 }
+										 System.out.println("");
+									 }
+								 }
+							}		
+							case 8: { // same speciemen
+								 break;
+							}		
 						}
-						case 1: { // food
-							m.eat();
-							map.setStatus(crd, m.getType());
-							// System.out.println("case 1");
-							m.getCordinates().setX(crd.getX() );
-							m.getCordinates().setY(crd.getY() );
-							bool = false;
-							break;
+					}
+					else if (m.getType()==7) {
+							switch (map.getStatus(crd)) {
+							
+							case 0: { // empty
+								map.setStatus(crd, m.getType() );
+								// System.out.println(" case 0");
+								m.getCordinates().setX(crd.getX() );
+								m.getCordinates().setY(crd.getY() );
+								bool = false;
+								break;
+							}
+							case 1: { // food
+								m.eat();
+								map.setStatus(crd, m.getType());
+								// System.out.println("case 1");
+								m.getCordinates().setX(crd.getX() );
+								m.getCordinates().setY(crd.getY() );
+								bool = false;
+								break;
+							}
+							case 80: { // egg
+								break;
+							}
+							case 70: { // egg other specimen
+								break; // to work on very hungry state
+							}
+							case 8: { // other speciemen
+								 for(IMite e: mitelist) {
+									 if(e.getCordinates().equals(crd) && e.getType()==8) {
+										 while(m.getHealth()>0 && e.getHealth()>0) {
+											 m.attack(e);
+											 System.out.println("EUROGLYPHUS ZADAJE DERMATHOGIDESOWI 5 OBRA¯EÑ(" + e.getHealth()+")");
+											 if(e.getHealth()!=0) {
+												e.attack(m);
+												System.out.println("DERMATHOGIDES ZADAJE EUROGLYPHUSOWI 8 OBRA¯EÑ(" + m.getHealth()+")");
+											 }
+										 }
+										 System.out.println("");
+									 }
+								 }
+							}		
+							case 7: { // same speciemen
+								 break;
+							}		
 						}
-						case 80: { // egg
-							break;
-						}
-						case 70: { // egg other specimen
-							break; // to work on very hungry state
-						}
-						case 7: { // other speciemen
-							 break; //in future some inkrementator to work on "surrended state"
-						}		
-						case 8: { // same speciemen
-							 break;
-						}		
 					}
 				}
 				
 			}
 			
-			
+			/*
 			for (int i = 0; i < egglist.size(); i++) { // for (IEgg e : egglist) { 
 				IEgg e;
 				e = egglist.get(i);
@@ -105,7 +167,7 @@ public class Simulation {
 					egglist.remove(e);
 					i--;
 				}
-			}
+			} */
 			
 			// visualisation
 			try {
